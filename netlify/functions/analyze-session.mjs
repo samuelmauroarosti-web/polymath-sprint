@@ -36,20 +36,25 @@ ${findings}
 
 ${notes ? `Their self-review notes on delivery:\n"""\n${notes}\n"""\n` : ""}
 
-Write your entire response in ${targetLanguage}, including all three fields below, regardless of what language their notes are written in.
+Write your entire response in ${targetLanguage}, including every field below, regardless of what language their notes are written in.
 
 Based on what they actually wrote, return ONLY raw JSON, no markdown fences, no preamble, in this exact shape:
 {
   "takeaways": ["...", "...", "..."],
   "researchFurther": ["...", "..."],
-  "visualSuggestion": "..."
+  "visual": { ...one of the five shapes below... }
 }
 
 Rules:
 - "takeaways": 3 to 5 short, sharp key takeaways that synthesize and clarify what they wrote. If something in their notes looks incomplete, vague, or possibly inaccurate, correct or sharpen it here rather than just restating it.
 - "researchFurther": 2 to 4 short bullet points naming specific things worth researching further or double-checking for accuracy, based on gaps in what they wrote.
-- "visualSuggestion": one or two sentences describing a single specific diagram, chart, or timeline they could sketch or look up that would reinforce this topic (describe it, don't generate an image).
-- Keep every string concise — a sentence or short phrase, not a paragraph.`;
+- "visual": pick whichever ONE of these five shapes best fits this specific topic, and return only that shape's object (always include "type" and "title"):
+  1. Comparison (two things contrasted): {"type":"comparison","title":"...","left":{"label":"...","points":["...","...","..."]},"right":{"label":"...","points":["...","...","..."]}} — 2 to 3 points per side.
+  2. Timeline (dated or ordered sequence of events): {"type":"timeline","title":"...","events":[{"label":"...","detail":"..."},...]} — 3 to 5 events, in order.
+  3. Cycle (a process that repeats/loops back to the start): {"type":"cycle","title":"...","steps":[{"label":"...","detail":"..."},...]} — 3 to 5 steps.
+  4. Flow (a one-directional process or sequence of steps): {"type":"flow","title":"...","steps":[{"label":"...","detail":"..."},...]} — 2 to 4 steps.
+  5. Stat (the topic revolves around one striking number): {"type":"stat","title":"...","value":"...","unit":"...","context":"one short sentence"}.
+- Keep every string concise — a short phrase or one sentence, never a paragraph. "label" fields especially must be 1-4 words.`;
 
   try {
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -61,7 +66,7 @@ Rules:
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 1200,
+        max_tokens: 1600,
         messages: [{ role: "user", content: prompt }],
       }),
     });
