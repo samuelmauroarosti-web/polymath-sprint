@@ -680,10 +680,20 @@ function App() {
       if (!resp.ok) throw new Error(data.error || "Refresh failed");
       const valid = (data.topics || []).filter(tp => tp && tp.title && tp.domain && DOMAIN_LABELS_I18N.en[tp.domain] && tp.hook);
       if (valid.length < 8) throw new Error("Too few valid topics returned — try again");
-      const historyEntry = { id: Date.now().toString(36), date: new Date().toISOString(), count: valid.length, titles: valid.map(tp => tp.title) };
+
+      // Swap out up to valid.length completed topics; any surplus new topics are pure additions.
+      // Unfinished topics and their coverage are left completely untouched.
+      const completedInBank = topicBank.filter(tp => coveredTopics.includes(tp.title));
+      const toReplace = completedInBank.slice(0, valid.length).map(tp => tp.title);
+      const replaceSet = new Set(toReplace);
+      const keptBank = topicBank.filter(tp => !replaceSet.has(tp.title));
+      const newBank = [...keptBank, ...valid];
+      const newCovered = coveredTopics.filter(title => !replaceSet.has(title));
+
+      const historyEntry = { id: Date.now().toString(36), date: new Date().toISOString(), count: valid.length, replaced: toReplace.length, titles: valid.map(tp => tp.title) };
       const newHistory = [historyEntry, ...refreshHistory];
-      setTopicBank(valid); setCoveredTopics([]); setCurrentTopic(null); setPhase("idle"); setRefreshHistory(newHistory); setReelText(t.readyToRoll);
-      persistAll(valid, [], sessionLog, newHistory);
+      setTopicBank(newBank); setCoveredTopics(newCovered); setCurrentTopic(null); setPhase("idle"); setRefreshHistory(newHistory); setReelText(t.readyToRoll);
+      persistAll(newBank, newCovered, sessionLog, newHistory);
     } catch (e) { setRefreshError(e.message || "Refresh failed — check the function logs in Netlify"); }
     finally { setRefreshing(false); }
   };
@@ -782,16 +792,7 @@ function App() {
     )
   );
 
-  let practiceBody;
-  if (allCovered) {
-    practiceBody = React.createElement("div", { className: "space-y-4" },
-      React.createElement("div", { className: "bg-rose/5 border border-rose/30 rounded-2xl p-6" },
-        React.createElement("div", { className: "text-xs text-rose uppercase tracking-wider mb-2" }, t.bankExhausted),
-        React.createElement("p", { className: "text-sm" }, t.bankExhaustedBody.replace("{n}", totalTopics))
-      )
-    );
-  } else {
-    practiceBody = React.createElement("div", { className: "space-y-6" },
+  let practiceBody = React.createElement("div", { className: "space-y-6" },
       React.createElement("div", { className: "bg-surface/60 backdrop-blur-md border border-edge rounded-2xl p-4" },
         React.createElement("div", { className: "text-xs text-inkdim uppercase tracking-wider mb-3" }, t.domainFilterLabel),
         React.createElement("div", { className: "flex flex-wrap gap-2" },
@@ -812,7 +813,7 @@ function App() {
           className: "text-white text-sm tracking-[0.2em] uppercase px-10 py-4 rounded-full font-medium transition-all duration-300 disabled:opacity-40 hover:scale-105 hover:shadow-[0_0_35px_rgba(45,212,191,0.4)]",
           style: { background: "linear-gradient(135deg, #2DD4BF, #C084FC)" }
         }, spinning ? t.rolling : currentTopic ? t.rollAgain : t.roll),
-        eligiblePool.length === 0 ? React.createElement("div", { className: "text-xs text-inkdim mt-3" }, t.noTopicsInDomain) : null
+        eligiblePool.length === 0 ? React.createElement("div", { className: "text-xs text-inkdim mt-3" }, allCovered ? t.bankExhaustedBody.replace("{n}", totalTopics) : t.noTopicsInDomain) : null
       ),
       displayTopic ? React.createElement("div", { className: "bg-surface/60 backdrop-blur-md border border-edge rounded-2xl p-6" },
         React.createElement("div", { className: "text-xs text-violet uppercase tracking-wider mb-2 flex items-center gap-2" }, dl[displayTopic.domain], translating ? React.createElement("span", { className: "inline-block w-2.5 h-2.5 border-2 border-violet border-t-transparent rounded-full spin" }) : null),
@@ -821,7 +822,6 @@ function App() {
         React.createElement("button", { onClick: startResearch, className: "w-full text-white text-sm tracking-wide px-4 py-3.5 rounded-full font-medium hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(45,212,191,0.3)] transition-all duration-300", style: { background: "linear-gradient(135deg, #2DD4BF, #22D3EE)" } }, t.startResearch)
       ) : null
     );
-  }
 
   if (phase === "logging") {
     practiceBody = React.createElement("div", { className: "bg-surface/60 backdrop-blur-md border border-edge rounded-2xl p-6 space-y-4" },
@@ -899,7 +899,8 @@ function App() {
     refreshHistory.map(entry =>
       React.createElement("div", { key: entry.id, className: "bg-surface/60 backdrop-blur-md border border-edge rounded-2xl p-5 hover:border-teal/30 transition-all duration-300" },
         React.createElement("div", { className: "flex items-start justify-between gap-3 mb-2" },
-          React.createElement("div", { className: "text-xs text-teal" }, new Date(entry.date).toLocaleString(), " · ", entry.count, " ", t.topicsUnit),
+          React.createElement("div", { className: "text-xs text-teal" }, new Date(entry.date).toLocaleString(), " · ", entry.count, " ", t.topicsUnit,
+            typeof entry.replaced === "number" ? " · " + entry.replaced + " replaced, " + (entry.count - entry.replaced) + " added" : ""),
           React.createElement("button", { onClick: () => copyHistoryEntry(entry), className: "text-xs px-3 py-1.5 rounded-full border border-edge2 text-inkdim hover:text-ink transition-all duration-200" }, copiedId === entry.id ? t.copied : t.copy)
         ),
         React.createElement("div", { className: "text-xs text-inkdim space-y-0.5 max-h-32 overflow-y-auto" }, entry.titles.slice(0, 10).map((tt, i) => React.createElement("div", { key: i }, "· " + tt)))
