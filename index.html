@@ -79,7 +79,8 @@ const UI_STRINGS = {
     resetProgress:"Reset progress", refreshTopicsBtn:"↻ Refresh Topics", generatingDots:"Generating…", sessionsLoggedStat:"sessions logged",
     refreshesStat:"refreshes", resetTitle:"Reset progress?", resetBody:"Clears covered-topics and session log from this device. Obsidian exports are unaffected.",
     yesReset:"Yes, reset", cancel:"Cancel", refreshTitle:"Refresh topic bank?", refreshBody:"Generates 18 new topics and resets coverage. Sessions and history are kept. Calls your Anthropic API key, at a small cost.",
-    yesRefresh:"Yes, refresh", bankExhausted:"Bank exhausted", bankExhaustedBody:"All {n} topics have been covered. Use Refresh Topics in the sidebar to generate a fresh bank.", loading:"Loading…" },
+    yesRefresh:"Yes, refresh", bankExhausted:"Bank exhausted", bankExhaustedBody:"All {n} topics have been covered. Use Refresh Topics in the sidebar to generate a fresh bank.", loading:"Loading…",
+    clearHistory:"Clear history", clearHistoryTitle:"Clear topic history?", clearHistoryBody:"This only clears the refresh log below — your topic bank and all its topics stay exactly as they are, so you can still roll and research every one of them.", yesClear:"Yes, clear", practiceAgain:"Practice Again", testRecall:"Test Recall (skip research)" },
   es: { subtitle:"15:00 investigación — 1:00 hablar — registro — exportar", navPractice:"PRÁCTICA", navLog:"REGISTRO DE SESIONES", navHistory:"HISTORIAL DE TEMAS",
     domainFilterLabel:"Filtro de dominio", all:"Todos", readyToRoll:"Listo para girar", roll:"Girar", rollAgain:"Girar de nuevo", rolling:"Girando…",
     noTopicsInDomain:"No hay temas sin cubrir en este dominio.", startResearch:"Iniciar investigación (15:00)", phaseResearch:"Investigación",
@@ -94,7 +95,8 @@ const UI_STRINGS = {
     resetProgress:"Restablecer progreso", refreshTopicsBtn:"↻ Actualizar temas", generatingDots:"Generando…", sessionsLoggedStat:"sesiones registradas",
     refreshesStat:"actualizaciones", resetTitle:"¿Restablecer progreso?", resetBody:"Esto borra los temas cubiertos y el registro de sesiones de este dispositivo. Las exportaciones a Obsidian no se ven afectadas.",
     yesReset:"Sí, restablecer", cancel:"Cancelar", refreshTitle:"¿Actualizar el banco de temas?", refreshBody:"Genera 18 temas nuevos y reinicia la cobertura. Las sesiones y el historial se conservan. Usa tu clave de API de Anthropic, con un costo pequeño.",
-    yesRefresh:"Sí, actualizar", bankExhausted:"Banco de temas agotado", bankExhaustedBody:"Se han cubierto los {n} temas. Usa Actualizar temas en la barra lateral para generar un banco nuevo.", loading:"Cargando…" },
+    yesRefresh:"Sí, actualizar", bankExhausted:"Banco de temas agotado", bankExhaustedBody:"Se han cubierto los {n} temas. Usa Actualizar temas en la barra lateral para generar un banco nuevo.", loading:"Cargando…",
+    clearHistory:"Borrar historial", clearHistoryTitle:"¿Borrar el historial de temas?", clearHistoryBody:"Esto solo borra el registro de actualizaciones — tu banco de temas y todos sus temas permanecen igual, así que aún puedes girarlos e investigarlos.", yesClear:"Sí, borrar", practiceAgain:"Practicar de nuevo", testRecall:"Probar memoria (sin investigar)" },
   it: { subtitle:"15:00 ricerca — 1:00 discorso — registro — esporta", navPractice:"PRATICA", navLog:"REGISTRO SESSIONI", navHistory:"CRONOLOGIA ARGOMENTI",
     domainFilterLabel:"Filtro per dominio", all:"Tutti", readyToRoll:"Pronto a girare", roll:"Gira", rollAgain:"Gira di nuovo", rolling:"In rotazione…",
     noTopicsInDomain:"Nessun argomento non coperto in questo dominio.", startResearch:"Inizia la ricerca (15:00)", phaseResearch:"Ricerca",
@@ -109,7 +111,8 @@ const UI_STRINGS = {
     resetProgress:"Reimposta progressi", refreshTopicsBtn:"↻ Aggiorna argomenti", generatingDots:"Generazione…", sessionsLoggedStat:"sessioni registrate",
     refreshesStat:"aggiornamenti", resetTitle:"Reimpostare i progressi?", resetBody:"Cancella gli argomenti coperti e il registro sessioni da questo dispositivo. Le esportazioni su Obsidian non sono interessate.",
     yesReset:"Sì, reimposta", cancel:"Annulla", refreshTitle:"Aggiornare il banco argomenti?", refreshBody:"Genera 18 nuovi argomenti e azzera la copertura. Sessioni e cronologia vengono conservate. Utilizza la tua chiave API Anthropic, con un piccolo costo.",
-    yesRefresh:"Sì, aggiorna", bankExhausted:"Banco argomenti esaurito", bankExhaustedBody:"Tutti i {n} argomenti sono stati coperti. Usa Aggiorna argomenti nella barra laterale per generarne di nuovi.", loading:"Caricamento…" },
+    yesRefresh:"Sì, aggiorna", bankExhausted:"Banco argomenti esaurito", bankExhaustedBody:"Tutti i {n} argomenti sono stati coperti. Usa Aggiorna argomenti nella barra laterale per generarne di nuovi.", loading:"Caricamento…",
+    clearHistory:"Cancella cronologia", clearHistoryTitle:"Cancellare la cronologia degli argomenti?", clearHistoryBody:"Questo cancella solo il registro degli aggiornamenti — il tuo banco argomenti e tutti i suoi argomenti restano invariati, quindi puoi ancora girarli e approfondirli.", yesClear:"Sì, cancella", practiceAgain:"Pratica di nuovo", testRecall:"Verifica memoria (senza ricerca)" },
   zh: { subtitle:"15:00 研究 — 1:00 演讲 — 记录 — 导出", navPractice:"练习", navLog:"练习记录", navHistory:"主题历史",
     domainFilterLabel:"领域筛选", all:"全部", readyToRoll:"准备好转动", roll:"转动", rollAgain:"再转一次", rolling:"转动中…",
     noTopicsInDomain:"该领域已无未完成的主题。", startResearch:"开始研究（15:00）", phaseResearch:"研究阶段",
@@ -124,7 +127,8 @@ const UI_STRINGS = {
     resetProgress:"重置进度", refreshTopicsBtn:"↻ 刷新主题", generatingDots:"生成中…", sessionsLoggedStat:"次练习已记录",
     refreshesStat:"次刷新", resetTitle:"重置进度？", resetBody:"这将清除本设备上已覆盖的主题和练习记录。Obsidian 导出内容不受影响。",
     yesReset:"确认重置", cancel:"取消", refreshTitle:"刷新主题库？", refreshBody:"将生成18个新主题并重置覆盖进度。练习记录与历史记录会保留。此操作会调用你的 Anthropic API 密钥，产生少量费用。",
-    yesRefresh:"确认刷新", bankExhausted:"主题库已用完", bankExhaustedBody:"全部 {n} 个主题均已覆盖。请在侧边栏点击刷新主题以生成新的主题库。", loading:"加载中…" },
+    yesRefresh:"确认刷新", bankExhausted:"主题库已用完", bankExhaustedBody:"全部 {n} 个主题均已覆盖。请在侧边栏点击刷新主题以生成新的主题库。", loading:"加载中…",
+    clearHistory:"清除历史记录", clearHistoryTitle:"清除主题历史记录？", clearHistoryBody:"这只会清除下方的刷新记录——你的主题库及其所有主题保持不变，仍可继续转动和研究它们。", yesClear:"确认清除", practiceAgain:"再次练习", testRecall:"测试记忆（跳过研究）" },
 };
 
 const SEED_TOPICS = [
@@ -474,6 +478,7 @@ function App() {
   const [domainFilter, setDomainFilter] = useState("all");
   const [view, setView] = useState("practice");
   const [resetConfirm, setResetConfirm] = useState(false);
+  const [clearHistoryConfirm, setClearHistoryConfirm] = useState(false);
   const [refreshConfirm, setRefreshConfirm] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState(null);
@@ -670,7 +675,16 @@ function App() {
     setCurrentTopic(null); setPhase("idle"); setReelText(t.readyToRoll);
     analyzeSessionInsights(session, lang);
   };
+  const practiceAgain = (s) => {
+    const found = topicBank.find(tp => tp.title === s.topic);
+    const topic = found || { title: s.topic, domain: s.domain, hook: "" };
+    setCurrentTopic(topic);
+    setReelText(topic.title);
+    setPhase("idle");
+    setView("practice");
+  };
   const resetProgress = () => { setCoveredTopics([]); setSessionLog([]); persistAll(topicBank, [], [], refreshHistory); setResetConfirm(false); };
+  const clearHistory = () => { setRefreshHistory([]); persistAll(topicBank, coveredTopics, sessionLog, []); setClearHistoryConfirm(false); };
   const refreshTopics = async () => {
     setRefreshConfirm(false); setRefreshing(true); setRefreshError(null);
     try {
@@ -818,8 +832,11 @@ function App() {
       displayTopic ? React.createElement("div", { className: "bg-surface/60 backdrop-blur-md border border-edge rounded-2xl p-6" },
         React.createElement("div", { className: "text-xs text-violet uppercase tracking-wider mb-2 flex items-center gap-2" }, dl[displayTopic.domain], translating ? React.createElement("span", { className: "inline-block w-2.5 h-2.5 border-2 border-violet border-t-transparent rounded-full spin" }) : null),
         React.createElement("div", { className: "font-serif text-2xl mb-3 leading-snug" }, displayTopic.title),
-        React.createElement("div", { className: "text-sm text-inkdim border-l-2 border-teal pl-3 mb-5 italic" }, displayTopic.hook),
-        React.createElement("button", { onClick: startResearch, className: "w-full text-white text-sm tracking-wide px-4 py-3.5 rounded-full font-medium hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(45,212,191,0.3)] transition-all duration-300", style: { background: "linear-gradient(135deg, #2DD4BF, #22D3EE)" } }, t.startResearch)
+        displayTopic.hook ? React.createElement("div", { className: "text-sm text-inkdim border-l-2 border-teal pl-3 mb-5 italic" }, displayTopic.hook) : null,
+        React.createElement("div", { className: "flex flex-col sm:flex-row gap-3" },
+          React.createElement("button", { onClick: startResearch, className: "flex-1 text-white text-sm tracking-wide px-4 py-3.5 rounded-full font-medium hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(45,212,191,0.3)] transition-all duration-300", style: { background: "linear-gradient(135deg, #2DD4BF, #22D3EE)" } }, t.startResearch),
+          currentTopic && coveredTopics.includes(currentTopic.title) ? React.createElement("button", { onClick: skipToSpeaking, className: "flex-1 text-sm tracking-wide px-4 py-3.5 rounded-full font-medium border border-violet text-violet hover:bg-violet/10 transition-all duration-300" }, t.testRecall) : null
+        )
       ) : null
     );
 
@@ -882,7 +899,8 @@ function App() {
             React.createElement("div", { className: "font-serif text-lg" }, s.topic),
             React.createElement("div", { className: "text-xs text-inkdim mt-1" }, t.ratingText + ": " + s.rating + "/5")
           ),
-          React.createElement("div", { className: "flex gap-2 shrink-0" },
+          React.createElement("div", { className: "flex gap-2 shrink-0 flex-wrap justify-end" },
+            React.createElement("button", { onClick: () => practiceAgain(s), className: "text-xs px-3 py-1.5 rounded-full border border-teal text-teal hover:bg-teal/10 transition-all duration-200" }, t.practiceAgain),
             React.createElement("button", { onClick: () => copySession(s), className: "text-xs px-3 py-1.5 rounded-full border border-edge2 text-inkdim hover:border-teal hover:text-teal transition-all duration-200" }, copiedId === s.id ? t.copied : t.copy),
             React.createElement("button", { onClick: () => downloadSession(s), className: "text-xs px-3 py-1.5 rounded-full border border-violet text-violet hover:bg-violet/10 transition-all duration-200" }, t.download)
           )
@@ -895,7 +913,10 @@ function App() {
 
   const historyView = React.createElement("div", { className: "space-y-4" },
     refreshHistory.length === 0 ? React.createElement("div", { className: "text-center text-inkdim text-sm py-16 border border-dashed border-edge rounded-2xl" }, t.noRefreshes)
-      : React.createElement("button", { onClick: copyFullHistory, className: "text-xs px-3.5 py-2 rounded-full border border-edge2 text-inkdim hover:border-teal hover:text-teal transition-all duration-200" }, copiedId === "__hist__" ? t.copied : t.copyEntireHistory),
+      : React.createElement("div", { className: "flex gap-2" },
+          React.createElement("button", { onClick: copyFullHistory, className: "text-xs px-3.5 py-2 rounded-full border border-edge2 text-inkdim hover:border-teal hover:text-teal transition-all duration-200" }, copiedId === "__hist__" ? t.copied : t.copyEntireHistory),
+          React.createElement("button", { onClick: () => setClearHistoryConfirm(true), className: "text-xs px-3.5 py-2 rounded-full border border-rose/50 text-rose hover:bg-rose/10 transition-all duration-200" }, t.clearHistory)
+        ),
     refreshHistory.map(entry =>
       React.createElement("div", { key: entry.id, className: "bg-surface/60 backdrop-blur-md border border-edge rounded-2xl p-5 hover:border-teal/30 transition-all duration-300" },
         React.createElement("div", { className: "flex items-start justify-between gap-3 mb-2" },
@@ -907,6 +928,17 @@ function App() {
       )
     )
   );
+
+  const clearHistoryModal = clearHistoryConfirm ? React.createElement("div", { className: "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30 p-4" },
+    React.createElement("div", { className: "bg-surface border border-rose/40 rounded-2xl p-6 max-w-sm w-full" },
+      React.createElement("div", { className: "text-xs text-rose uppercase tracking-wider mb-2" }, t.clearHistoryTitle),
+      React.createElement("p", { className: "text-sm text-inkdim mb-5" }, t.clearHistoryBody),
+      React.createElement("div", { className: "flex gap-3" },
+        React.createElement("button", { onClick: clearHistory, className: "flex-1 bg-rose text-white text-xs px-3 py-2.5 rounded-full" }, t.yesClear),
+        React.createElement("button", { onClick: () => setClearHistoryConfirm(false), className: "flex-1 border border-edge2 text-inkdim text-xs px-3 py-2.5 rounded-full" }, t.cancel)
+      )
+    )
+  ) : null;
 
   const resetModal = resetConfirm ? React.createElement("div", { className: "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30 p-4" },
     React.createElement("div", { className: "bg-surface border border-rose/40 rounded-2xl p-6 max-w-sm w-full" },
@@ -938,7 +970,7 @@ function App() {
         React.createElement("div", null, view === "practice" ? practiceBody : view === "log" ? logView : historyView),
         sidebar
       ),
-      savedToast, storageWarning, resetModal, refreshModal
+      savedToast, storageWarning, resetModal, refreshModal, clearHistoryModal
     )
   );
 }
