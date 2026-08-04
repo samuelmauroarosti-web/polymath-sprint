@@ -19,14 +19,14 @@ export default async (request, context) => {
     );
   }
 
-  const prompt = `Generate exactly 72 new "Polymath Sprint" speaking-practice topics for a 1-minute extemporaneous speaking app, 8 topics each across these 9 domain keys: physics, math, history, art, finance, ai, data, sport, lang.
+  const prompt = `Generate exactly 27 new "Polymath Sprint" speaking-practice topics for a 1-minute extemporaneous speaking app, 3 topics each across these 9 domain keys: physics, math, history, art, finance, ai, data, sport, lang.
 
-Return ONLY a raw JSON array of 72 objects, nothing else — no markdown fences, no preamble, no explanation, no trailing commentary. Each object must have exactly these keys: "title" (string), "domain" (one of the 9 keys above, exactly as spelled), "hook" (string).
+Return ONLY a raw JSON array of 27 objects, nothing else — no markdown fences, no preamble, no explanation, no trailing commentary. Each object must have exactly these keys: "title" (string), "domain" (one of the 9 keys above, exactly as spelled), "hook" (string).
 
 Rules for every topic:
 - title: a specific, counterintuitive claim or true story — never a vague subject area — the kind of thing that performs well as short-form content (Instagram Reels/TikTok style curiosity)
 - hook: one sentence stating why it's useful or how it bridges to finance, investing, AI, decision-making, sport performance, or language skill — written for a Hong Kong-raised, trilingual (English/Mandarin/Italian) Babson College finance student working toward a 2027 Millennium Management investment internship, with experience in investment banking, investment management, and equity research
-- domain spread must be exactly 8 topics per domain, 9 domains, 72 total
+- domain spread must be exactly 3 topics per domain, 9 domains, 27 total
 - Do not repeat or closely resemble any of these existing titles: ${JSON.stringify(existingTitles)}`;
 
   try {
@@ -39,7 +39,7 @@ Rules for every topic:
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 4000,
+        max_tokens: 1800,
         messages: [{ role: "user", content: prompt }],
       }),
     });
