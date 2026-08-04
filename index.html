@@ -78,7 +78,7 @@ const UI_STRINGS = {
     ratingText:"Rating", noRefreshes:"No refreshes yet", copyEntireHistory:"Copy entire history", topicsUnit:"topics", coverage:"Coverage",
     resetProgress:"Reset progress", refreshTopicsBtn:"↻ Refresh Topics", generatingDots:"Generating…", sessionsLoggedStat:"sessions logged",
     refreshesStat:"refreshes", resetTitle:"Reset progress?", resetBody:"Clears covered-topics and session log from this device. Obsidian exports are unaffected.",
-    yesReset:"Yes, reset", cancel:"Cancel", refreshTitle:"Refresh topic bank?", refreshBody:"Generates 72 new topics and resets coverage. Sessions and history are kept. Calls your Anthropic API key, at a small cost.",
+    yesReset:"Yes, reset", cancel:"Cancel", refreshTitle:"Refresh topic bank?", refreshBody:"Generates 27 new topics and resets coverage. Sessions and history are kept. Calls your Anthropic API key, at a small cost.",
     yesRefresh:"Yes, refresh", bankExhausted:"Bank exhausted", bankExhaustedBody:"All {n} topics have been covered. Use Refresh Topics in the sidebar to generate a fresh bank.", loading:"Loading…" },
   es: { subtitle:"15:00 investigación — 1:00 hablar — registro — exportar", navPractice:"PRÁCTICA", navLog:"REGISTRO DE SESIONES", navHistory:"HISTORIAL DE TEMAS",
     domainFilterLabel:"Filtro de dominio", all:"Todos", readyToRoll:"Listo para girar", roll:"Girar", rollAgain:"Girar de nuevo", rolling:"Girando…",
@@ -93,7 +93,7 @@ const UI_STRINGS = {
     ratingText:"Calificación", noRefreshes:"Aún no hay actualizaciones", copyEntireHistory:"Copiar todo el historial", topicsUnit:"temas", coverage:"Cobertura",
     resetProgress:"Restablecer progreso", refreshTopicsBtn:"↻ Actualizar temas", generatingDots:"Generando…", sessionsLoggedStat:"sesiones registradas",
     refreshesStat:"actualizaciones", resetTitle:"¿Restablecer progreso?", resetBody:"Esto borra los temas cubiertos y el registro de sesiones de este dispositivo. Las exportaciones a Obsidian no se ven afectadas.",
-    yesReset:"Sí, restablecer", cancel:"Cancelar", refreshTitle:"¿Actualizar el banco de temas?", refreshBody:"Genera 72 temas nuevos y reinicia la cobertura. Las sesiones y el historial se conservan. Usa tu clave de API de Anthropic, con un costo pequeño.",
+    yesReset:"Sí, restablecer", cancel:"Cancelar", refreshTitle:"¿Actualizar el banco de temas?", refreshBody:"Genera 27 temas nuevos y reinicia la cobertura. Las sesiones y el historial se conservan. Usa tu clave de API de Anthropic, con un costo pequeño.",
     yesRefresh:"Sí, actualizar", bankExhausted:"Banco de temas agotado", bankExhaustedBody:"Se han cubierto los {n} temas. Usa Actualizar temas en la barra lateral para generar un banco nuevo.", loading:"Cargando…" },
   it: { subtitle:"15:00 ricerca — 1:00 discorso — registro — esporta", navPractice:"PRATICA", navLog:"REGISTRO SESSIONI", navHistory:"CRONOLOGIA ARGOMENTI",
     domainFilterLabel:"Filtro per dominio", all:"Tutti", readyToRoll:"Pronto a girare", roll:"Gira", rollAgain:"Gira di nuovo", rolling:"In rotazione…",
@@ -108,7 +108,7 @@ const UI_STRINGS = {
     ratingText:"Voto", noRefreshes:"Nessun aggiornamento ancora", copyEntireHistory:"Copia tutta la cronologia", topicsUnit:"argomenti", coverage:"Copertura",
     resetProgress:"Reimposta progressi", refreshTopicsBtn:"↻ Aggiorna argomenti", generatingDots:"Generazione…", sessionsLoggedStat:"sessioni registrate",
     refreshesStat:"aggiornamenti", resetTitle:"Reimpostare i progressi?", resetBody:"Cancella gli argomenti coperti e il registro sessioni da questo dispositivo. Le esportazioni su Obsidian non sono interessate.",
-    yesReset:"Sì, reimposta", cancel:"Annulla", refreshTitle:"Aggiornare il banco argomenti?", refreshBody:"Genera 72 nuovi argomenti e azzera la copertura. Sessioni e cronologia vengono conservate. Utilizza la tua chiave API Anthropic, con un piccolo costo.",
+    yesReset:"Sì, reimposta", cancel:"Annulla", refreshTitle:"Aggiornare il banco argomenti?", refreshBody:"Genera 27 nuovi argomenti e azzera la copertura. Sessioni e cronologia vengono conservate. Utilizza la tua chiave API Anthropic, con un piccolo costo.",
     yesRefresh:"Sì, aggiorna", bankExhausted:"Banco argomenti esaurito", bankExhaustedBody:"Tutti i {n} argomenti sono stati coperti. Usa Aggiorna argomenti nella barra laterale per generarne di nuovi.", loading:"Caricamento…" },
   zh: { subtitle:"15:00 研究 — 1:00 演讲 — 记录 — 导出", navPractice:"练习", navLog:"练习记录", navHistory:"主题历史",
     domainFilterLabel:"领域筛选", all:"全部", readyToRoll:"准备好转动", roll:"转动", rollAgain:"再转一次", rolling:"转动中…",
@@ -123,7 +123,7 @@ const UI_STRINGS = {
     ratingText:"评分", noRefreshes:"暂无刷新记录", copyEntireHistory:"复制全部历史", topicsUnit:"个主题", coverage:"覆盖进度",
     resetProgress:"重置进度", refreshTopicsBtn:"↻ 刷新主题", generatingDots:"生成中…", sessionsLoggedStat:"次练习已记录",
     refreshesStat:"次刷新", resetTitle:"重置进度？", resetBody:"这将清除本设备上已覆盖的主题和练习记录。Obsidian 导出内容不受影响。",
-    yesReset:"确认重置", cancel:"取消", refreshTitle:"刷新主题库？", refreshBody:"将生成72个新主题并重置覆盖进度。练习记录与历史记录会保留。此操作会调用你的 Anthropic API 密钥，产生少量费用。",
+    yesReset:"确认重置", cancel:"取消", refreshTitle:"刷新主题库？", refreshBody:"将生成27个新主题并重置覆盖进度。练习记录与历史记录会保留。此操作会调用你的 Anthropic API 密钥，产生少量费用。",
     yesRefresh:"确认刷新", bankExhausted:"主题库已用完", bankExhaustedBody:"全部 {n} 个主题均已覆盖。请在侧边栏点击刷新主题以生成新的主题库。", loading:"加载中…" },
 };
 
@@ -301,6 +301,25 @@ function speakingEndCue() { beep(220, 400, "sawtooth"); }
 function wheelTick() { beep(900 + Math.random() * 300, 16, "square"); }
 function wheelLandCue() { beep(520, 90, "sine"); setTimeout(() => beep(780, 140, "sine"), 90); setTimeout(() => beep(1040, 180, "sine"), 220); }
 
+function visualToMarkdown(v, oldText) {
+  if (!v || !v.type) return oldText ? "## Suggested Visual\n" + oldText + "\n\n" : "";
+  let body = "## " + (v.title || "Visual") + "\n";
+  if (v.type === "comparison" && v.left && v.right) {
+    body += "**" + v.left.label + "**\n" + (v.left.points || []).map(p => "- " + p).join("\n") +
+      "\n\n**vs**\n\n**" + v.right.label + "**\n" + (v.right.points || []).map(p => "- " + p).join("\n") + "\n";
+  } else if (v.type === "timeline" && v.events) {
+    body += v.events.map((e, i) => (i + 1) + ". **" + e.label + "** — " + (e.detail || "")).join("\n") + "\n";
+  } else if (v.type === "cycle" && v.steps) {
+    body += v.steps.map((s2, i) => (i + 1) + ". **" + s2.label + "** — " + (s2.detail || "")).join("\n") + "\n(repeats back to step 1)\n";
+  } else if (v.type === "flow" && v.steps) {
+    body += v.steps.map(s2 => s2.label).join(" → ") + "\n" + v.steps.map((s2, i) => (i + 1) + ". " + s2.label + (s2.detail ? " — " + s2.detail : "")).join("\n") + "\n";
+  } else if (v.type === "stat") {
+    body += "**" + v.value + " " + (v.unit || "") + "**\n" + (v.context || "") + "\n";
+  } else {
+    return oldText ? "## Suggested Visual\n" + oldText + "\n\n" : "";
+  }
+  return body + "\n";
+}
 function toObsidianMarkdown(s) {
   let md = "---\n" + "title: " + s.topic + "\n" + "date: " + s.date + "\n" + "type: polymath-sprint\n" +
     "domain: " + s.domain + "\n" + "rating: " + s.rating + "/5\n" + "tags: [speaking-practice, " + s.domain + "]\n" + "---\n\n" +
@@ -308,7 +327,7 @@ function toObsidianMarkdown(s) {
     "## Speech\nVideo: " + (s.video || "_(none recorded)_") + "\n\n" + "## Self-Review\n" + (s.notes || "_(none recorded)_") + "\n\n";
   if (s.takeaways && s.takeaways.length) md += "## Key Takeaways\n" + s.takeaways.map(t => "- " + t).join("\n") + "\n\n";
   if (s.researchFurther && s.researchFurther.length) md += "## Research Further\n" + s.researchFurther.map(t => "- " + t).join("\n") + "\n\n";
-  if (s.visualSuggestion) md += "## Suggested Visual\n" + s.visualSuggestion + "\n\n";
+  md += visualToMarkdown(s.visual, s.visualSuggestion);
   md += "## Connections\n- [[ ]]\n";
   return md;
 }
@@ -352,6 +371,90 @@ function WheelDial({ deg, spinning }) {
       )
     ),
     React.createElement("div", { className: "absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0", style: { borderLeft: "8px solid transparent", borderRight: "8px solid transparent", borderTop: "14px solid #2DD4BF", filter: "drop-shadow(0 0 6px rgba(45,212,191,0.7))" } })
+  );
+}
+
+function StatVisual({ v }) {
+  return React.createElement("div", { className: "text-center py-4" },
+    React.createElement("div", { className: "font-serif text-5xl text-teal mb-1" }, v.value, " ", React.createElement("span", { className: "text-2xl text-violet" }, v.unit || "")),
+    v.context ? React.createElement("div", { className: "text-xs text-inkdim mt-2 italic max-w-sm mx-auto" }, v.context) : null
+  );
+}
+function ComparisonVisual({ v }) {
+  const Col = (side, color) => React.createElement("div", { className: "flex-1 bg-surfaceHover rounded-xl p-4 border border-edge" },
+    React.createElement("div", { className: "text-xs uppercase tracking-wider mb-2", style: { color } }, side.label),
+    React.createElement("ul", { className: "text-xs space-y-1.5 list-disc pl-4 text-inkdim" }, (side.points || []).slice(0, 4).map((p, i) => React.createElement("li", { key: i }, p)))
+  );
+  return React.createElement("div", { className: "flex flex-col sm:flex-row gap-3 items-stretch" },
+    Col(v.left || { label: "A", points: [] }, "#2DD4BF"),
+    React.createElement("div", { className: "flex items-center justify-center text-[10px] text-inkdim font-sans px-1" }, "vs"),
+    Col(v.right || { label: "B", points: [] }, "#C084FC")
+  );
+}
+function TimelineVisual({ v }) {
+  const events = (v.events || []).slice(0, 5);
+  return React.createElement("div", { className: "space-y-0" },
+    events.map((e, i) => React.createElement("div", { key: i, className: "flex gap-3" },
+      React.createElement("div", { className: "flex flex-col items-center" },
+        React.createElement("div", { className: "w-2.5 h-2.5 rounded-full bg-teal shrink-0 mt-1" }),
+        i < events.length - 1 ? React.createElement("div", { className: "w-px flex-1 bg-edge2 my-1" }) : null
+      ),
+      React.createElement("div", { className: "pb-4" },
+        React.createElement("div", { className: "text-sm font-medium" }, e.label),
+        e.detail ? React.createElement("div", { className: "text-xs text-inkdim mt-0.5" }, e.detail) : null
+      )
+    ))
+  );
+}
+function FlowVisual({ v }) {
+  const steps = (v.steps || []).slice(0, 4);
+  return React.createElement("div", { className: "flex flex-wrap items-center gap-2" },
+    steps.map((s2, i) => React.createElement(React.Fragment, { key: i },
+      React.createElement("div", { className: "bg-surfaceHover border border-edge rounded-xl px-3 py-2 text-center" },
+        React.createElement("div", { className: "text-xs font-medium" }, s2.label),
+        s2.detail ? React.createElement("div", { className: "text-[10px] text-inkdim mt-0.5" }, s2.detail) : null
+      ),
+      i < steps.length - 1 ? React.createElement("div", { className: "text-violet text-sm" }, "→") : null
+    ))
+  );
+}
+function CycleVisual({ v }) {
+  const steps = (v.steps || []).slice(0, 5);
+  const n = steps.length;
+  const R = 68, cx = 100, cy = 100;
+  const pos = (i) => { const a = (i / n) * 2 * Math.PI - Math.PI / 2; return { x: cx + R * Math.cos(a), y: cy + R * Math.sin(a) }; };
+  const arcs = [];
+  for (let i = 0; i < n; i++) {
+    const p1 = pos(i), p2 = pos((i + 1) % n);
+    const mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
+    const dx = mx - cx, dy = my - cy, dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    const cxp = mx + (dx / dist) * 14, cyp = my + (dy / dist) * 14;
+    arcs.push(React.createElement("path", { key: i, d: "M " + p1.x + " " + p1.y + " Q " + cxp + " " + cyp + " " + p2.x + " " + p2.y, fill: "none", stroke: "#C084FC", strokeWidth: 1.5, markerEnd: "url(#cyclearrow)" }));
+  }
+  return React.createElement("div", { className: "flex flex-col sm:flex-row gap-5 items-center" },
+    React.createElement("svg", { viewBox: "0 0 200 200", className: "w-40 h-40 shrink-0" },
+      React.createElement("defs", null, React.createElement("marker", { id: "cyclearrow", markerWidth: 8, markerHeight: 8, refX: 6, refY: 3, orient: "auto" },
+        React.createElement("path", { d: "M0,0 L6,3 L0,6 Z", fill: "#C084FC" }))),
+      arcs,
+      steps.map((s2, i) => { const p = pos(i); return React.createElement(React.Fragment, { key: i },
+        React.createElement("circle", { cx: p.x, cy: p.y, r: 13, fill: "#141833", stroke: "#2DD4BF", strokeWidth: 1.5 }),
+        React.createElement("text", { x: p.x, y: p.y + 4, textAnchor: "middle", fontSize: 11, fill: "#2DD4BF", fontFamily: "Inter" }, i + 1)
+      ); })
+    ),
+    React.createElement("ul", { className: "text-xs space-y-1.5" }, steps.map((s2, i) =>
+      React.createElement("li", { key: i }, React.createElement("span", { className: "text-teal font-medium" }, (i + 1) + ". " + s2.label), s2.detail ? React.createElement("span", { className: "text-inkdim" }, " — " + s2.detail) : null)
+    ))
+  );
+}
+function VisualRenderer({ v }) {
+  if (!v || !v.type) return null;
+  return React.createElement("div", null,
+    v.title ? React.createElement("div", { className: "text-xs text-inkdim uppercase tracking-wider mb-3" }, v.title) : null,
+    v.type === "stat" ? React.createElement(StatVisual, { v }) :
+    v.type === "comparison" ? React.createElement(ComparisonVisual, { v }) :
+    v.type === "timeline" ? React.createElement(TimelineVisual, { v }) :
+    v.type === "cycle" ? React.createElement(CycleVisual, { v }) :
+    v.type === "flow" ? React.createElement(FlowVisual, { v }) : null
   );
 }
 
@@ -443,7 +546,7 @@ function App() {
         insightsStatus: "done",
         takeaways: Array.isArray(data.takeaways) ? data.takeaways : [],
         researchFurther: Array.isArray(data.researchFurther) ? data.researchFurther : [],
-        visualSuggestion: data.visualSuggestion || "",
+        visual: (data.visual && data.visual.type) ? data.visual : null,
       });
     } catch (e) { updateSessionInsights(session.id, { insightsStatus: "error" }); }
   };
@@ -576,7 +679,7 @@ function App() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Refresh failed");
       const valid = (data.topics || []).filter(tp => tp && tp.title && tp.domain && DOMAIN_LABELS_I18N.en[tp.domain] && tp.hook);
-      if (valid.length < 20) throw new Error("Too few valid topics returned — try again");
+      if (valid.length < 15) throw new Error("Too few valid topics returned — try again");
       const historyEntry = { id: Date.now().toString(36), date: new Date().toISOString(), count: valid.length, titles: valid.map(tp => tp.title) };
       const newHistory = [historyEntry, ...refreshHistory];
       setTopicBank(valid); setCoveredTopics([]); setCurrentTopic(null); setPhase("idle"); setRefreshHistory(newHistory); setReelText(t.readyToRoll);
@@ -759,7 +862,8 @@ function App() {
     if (s.insightsStatus === "done") return React.createElement("div", { className: "mt-4 pt-4 border-t border-edge space-y-3" },
       s.takeaways && s.takeaways.length ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-teal uppercase tracking-wider mb-1" }, t.keyTakeaways), React.createElement("ul", { className: "text-xs space-y-1 list-disc pl-4 text-inkdim" }, s.takeaways.map((tk, i) => React.createElement("li", { key: i }, tk)))) : null,
       s.researchFurther && s.researchFurther.length ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-violet uppercase tracking-wider mb-1" }, t.researchFurther), React.createElement("ul", { className: "text-xs space-y-1 list-disc pl-4 text-inkdim" }, s.researchFurther.map((tk, i) => React.createElement("li", { key: i }, tk)))) : null,
-      s.visualSuggestion ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-inkdim uppercase tracking-wider mb-1" }, t.suggestedVisual), React.createElement("div", { className: "text-xs italic" }, s.visualSuggestion)) : null
+      s.visual && s.visual.type ? React.createElement("div", { className: "bg-surfaceHover/50 rounded-xl p-4" }, React.createElement(VisualRenderer, { v: s.visual })) :
+        s.visualSuggestion ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-inkdim uppercase tracking-wider mb-1" }, t.suggestedVisual), React.createElement("div", { className: "text-xs italic" }, s.visualSuggestion)) : null
     );
     return null;
   };
