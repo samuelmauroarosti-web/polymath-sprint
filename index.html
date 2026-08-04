@@ -324,15 +324,20 @@ function visualToMarkdown(v, oldText) {
   }
   return body + "\n";
 }
+const HUB_NAMES = {
+  physics: "Physics", math: "Mathematics", history: "World History", art: "Art History",
+  finance: "Finance and Markets", ai: "AI and ML", data: "Data Science", sport: "Sport Science", lang: "Linguistics",
+};
 function toObsidianMarkdown(s) {
+  const hub = HUB_NAMES[s.domain] || s.domain;
   let md = "---\n" + "title: " + s.topic + "\n" + "date: " + s.date + "\n" + "type: polymath-sprint\n" +
-    "domain: " + s.domain + "\n" + "rating: " + s.rating + "/5\n" + "tags: [speaking-practice, " + s.domain + "]\n" + "---\n\n" +
+    "domain: " + s.domain + "\n" + "rating: " + s.rating + "/5\n" + "tags: [Readings, " + s.domain + "]\n" + "---\n\n" +
     "## Topic\n" + s.topic + "\n\n" + "## Research Findings\n" + (s.findings || "_(none recorded)_") + "\n\n" +
     "## Speech\nVideo: " + (s.video || "_(none recorded)_") + "\n\n" + "## Self-Review\n" + (s.notes || "_(none recorded)_") + "\n\n";
   if (s.takeaways && s.takeaways.length) md += "## Key Takeaways\n" + s.takeaways.map(t => "- " + t).join("\n") + "\n\n";
   if (s.researchFurther && s.researchFurther.length) md += "## Research Further\n" + s.researchFurther.map(t => "- " + t).join("\n") + "\n\n";
   md += visualToMarkdown(s.visual, s.visualSuggestion);
-  md += "## Connections\n- [[ ]]\n";
+  md += "## Connections\n- [[" + hub + "]]\n- [[ ]]\n";
   return md;
 }
 function historyEntryToMarkdown(entry) {
@@ -344,6 +349,12 @@ function historyEntryToMarkdown(entry) {
   return md;
 }
 function slugify(s) { return (s || "untitled").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60); }
+function filenameSafe(s) { return (s || "untitled").replace(/[\/\\:*?"<>|]/g, "-").replace(/\s+/g, " ").trim(); }
+function sessionFilename(s) {
+  const dateStr = new Date(s.date).toISOString().slice(0, 10);
+  const hub = HUB_NAMES[s.domain] || s.domain;
+  return filenameSafe(s.topic) + " — " + hub + " — " + dateStr + ".md";
+}
 function downloadFile(filename, content) {
   const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -732,7 +743,7 @@ function App() {
   const copyFullLog = () => copyText("__full__", sessionLog.map(toObsidianMarkdown).join("\n\n---\n\n"));
   const copyHistoryEntry = (e) => copyText(e.id, historyEntryToMarkdown(e));
   const copyFullHistory = () => copyText("__hist__", refreshHistory.map(historyEntryToMarkdown).join("\n---\n\n"));
-  const downloadSession = (s) => downloadFile(slugify(s.topic) + ".md", toObsidianMarkdown(s));
+  const downloadSession = (s) => downloadFile(sessionFilename(s), toObsidianMarkdown(s));
   const downloadFullLog = () => downloadFile("polymath-sprint-full-log.md", sessionLog.map(toObsidianMarkdown).join("\n\n---\n\n"));
 
   if (!loaded) return React.createElement(React.Fragment, null, React.createElement(NebulaBackground), React.createElement("div", { className: "min-h-screen flex items-center justify-center text-inkdim text-sm" }, "Loading…"));
