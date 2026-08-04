@@ -23,13 +23,12 @@ export default async (request, context) => {
     );
   }
 
-  const prompt = `Translate the following English topic title and one-sentence hook into ${langName}. This is for a finance student's speaking-practice app — keep the tone confident and the meaning exact. Do not add explanation or notes, just the translation.
+  const prompt = `Translate the following English topic title and one-sentence hook into ${langName}. This is for a finance student's speaking-practice app — keep the tone confident and the meaning exact.
 
 Title: ${title}
 Hook: ${hook || ""}
 
-Return ONLY raw JSON, no markdown fences, no preamble, in this exact shape:
-{"title": "...", "hook": "..."}`;
+Call the submit_translation tool with the result.`;
 
   try {
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -41,7 +40,20 @@ Return ONLY raw JSON, no markdown fences, no preamble, in this exact shape:
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 500,
+        max_tokens: 600,
+        tools: [{
+          name: "submit_translation",
+          description: "Submit the translated title and hook.",
+          input_schema: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              hook: { type: "string" },
+            },
+            required: ["title", "hook"],
+          },
+        }],
+        tool_choice: { type: "tool", name: "submit_translation" },
         messages: [{ role: "user", content: prompt }],
       }),
     });
@@ -54,11 +66,10 @@ Return ONLY raw JSON, no markdown fences, no preamble, in this exact shape:
       );
     }
 
-    const raw = (data.content && data.content[0] && data.content[0].text) || "";
-    const cleaned = raw.replace(/```json|```/g, "").trim();
-    const parsed = JSON.parse(cleaned);
+    const toolBlock = (data.content || []).find(b => b.type === "tool_use" && b.name === "submit_translation");
+    if (!toolBlock || !toolBlock.input) throw new Error("Model did not return a structured translation");
 
-    return new Response(JSON.stringify(parsed), { status: 200, headers: { "content-type": "application/json" } });
+    return new Response(JSON.stringify(toolBlock.input), { status: 200, headers: { "content-type": "application/json" } });
   } catch (err) {
     return new Response(
       JSON.stringify({ error: String(err && err.message ? err.message : err) }),
