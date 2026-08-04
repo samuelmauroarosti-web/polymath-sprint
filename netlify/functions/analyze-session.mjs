@@ -36,25 +36,22 @@ ${findings}
 
 ${notes ? `Their self-review notes on delivery:\n"""\n${notes}\n"""\n` : ""}
 
-Write your entire response in ${targetLanguage}, including every field below, regardless of what language their notes are written in.
-
-Based on what they actually wrote, return ONLY raw JSON, no markdown fences, no preamble, in this exact shape:
-{
-  "takeaways": ["...", "...", "..."],
-  "researchFurther": ["...", "..."],
-  "visual": { ...one of the five shapes below... }
-}
+Write your entire response in ${targetLanguage}, including every field, regardless of what language their notes are written in.
 
 Rules:
-- "takeaways": 3 to 5 short, sharp key takeaways that synthesize and clarify what they wrote. If something in their notes looks incomplete, vague, or possibly inaccurate, correct or sharpen it here rather than just restating it.
-- "researchFurther": 2 to 4 short bullet points naming specific things worth researching further or double-checking for accuracy, based on gaps in what they wrote.
-- "visual": pick whichever ONE of these five shapes best fits this specific topic, and return only that shape's object (always include "type" and "title"):
-  1. Comparison (two things contrasted): {"type":"comparison","title":"...","left":{"label":"...","points":["...","...","..."]},"right":{"label":"...","points":["...","...","..."]}} — 2 to 3 points per side.
-  2. Timeline (dated or ordered sequence of events): {"type":"timeline","title":"...","events":[{"label":"...","detail":"..."},...]} — 3 to 5 events, in order.
-  3. Cycle (a process that repeats/loops back to the start): {"type":"cycle","title":"...","steps":[{"label":"...","detail":"..."},...]} — 3 to 5 steps.
-  4. Flow (a one-directional process or sequence of steps): {"type":"flow","title":"...","steps":[{"label":"...","detail":"..."},...]} — 2 to 4 steps.
-  5. Stat (the topic revolves around one striking number): {"type":"stat","title":"...","value":"...","unit":"...","context":"one short sentence"}.
-- Keep every string concise — a short phrase or one sentence, never a paragraph. "label" fields especially must be 1-4 words.`;
+- takeaways: 3 to 5 short, sharp key takeaways that synthesize and clarify what they wrote. If something in their notes looks incomplete, vague, or possibly inaccurate, correct or sharpen it here rather than just restating it.
+- researchFurther: 2 to 4 short bullet points naming specific things worth researching further or double-checking for accuracy, based on gaps in what they wrote.
+- visual: pick whichever ONE of these five shapes best fits this specific topic:
+  1. Comparison (two things contrasted): set type="comparison", fill left.label, left.points (2-3), right.label, right.points (2-3).
+  2. Timeline (dated or ordered sequence): set type="timeline", fill events (3-5 items, each with label + detail).
+  3. Cycle (a process that loops back to the start): set type="cycle", fill steps (3-5 items, each with label + detail).
+  4. Flow (a one-directional process): set type="flow", fill steps (2-4 items, each with label + detail).
+  5. Stat (topic revolves around one striking number): set type="stat", fill value, unit, context.
+  Only fill the fields relevant to the chosen type; leave the rest empty. Always fill title.
+- Keep every string concise — a short phrase or one sentence, never a paragraph. Label fields must be 1-4 words.
+- Use single quotes, not double quotes, for any quoted term or phrase.
+
+Call the submit_insights tool with the result.`;
 
   try {
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -66,7 +63,47 @@ Rules:
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 1600,
+        max_tokens: 1800,
+        tools: [{
+          name: "submit_insights",
+          description: "Submit key takeaways, further research points, and a visual diagram spec.",
+          input_schema: {
+            type: "object",
+            properties: {
+              takeaways: { type: "array", items: { type: "string" } },
+              researchFurther: { type: "array", items: { type: "string" } },
+              visual: {
+                type: "object",
+                properties: {
+                  type: { type: "string", enum: ["comparison", "timeline", "cycle", "flow", "stat"] },
+                  title: { type: "string" },
+                  left: {
+                    type: "object",
+                    properties: { label: { type: "string" }, points: { type: "array", items: { type: "string" } } },
+                  },
+                  right: {
+                    type: "object",
+                    properties: { label: { type: "string" }, points: { type: "array", items: { type: "string" } } },
+                  },
+                  events: {
+                    type: "array",
+                    items: { type: "object", properties: { label: { type: "string" }, detail: { type: "string" } } },
+                  },
+                  steps: {
+                    type: "array",
+                    items: { type: "object", properties: { label: { type: "string" }, detail: { type: "string" } } },
+                  },
+                  value: { type: "string" },
+                  unit: { type: "string" },
+                  context: { type: "string" },
+                },
+                required: ["type", "title"],
+              },
+            },
+            required: ["takeaways", "researchFurther", "visual"],
+          },
+        }],
+        tool_choice: { type: "tool", name: "submit_insights" },
         messages: [{ role: "user", content: prompt }],
       }),
     });
@@ -79,11 +116,10 @@ Rules:
       );
     }
 
-    const raw = (data.content && data.content[0] && data.content[0].text) || "";
-    const cleaned = raw.replace(/```json|```/g, "").trim();
-    const parsed = JSON.parse(cleaned);
+    const toolBlock = (data.content || []).find(b => b.type === "tool_use" && b.name === "submit_insights");
+    if (!toolBlock || !toolBlock.input) throw new Error("Model did not return structured insights");
 
-    return new Response(JSON.stringify(parsed), { status: 200, headers: { "content-type": "application/json" } });
+    return new Response(JSON.stringify(toolBlock.input), { status: 200, headers: { "content-type": "application/json" } });
   } catch (err) {
     return new Response(
       JSON.stringify({ error: String(err && err.message ? err.message : err) }),
