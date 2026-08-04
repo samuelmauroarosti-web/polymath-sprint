@@ -78,7 +78,7 @@ const UI_STRINGS = {
     ratingText:"Rating", noRefreshes:"No refreshes yet", copyEntireHistory:"Copy entire history", topicsUnit:"topics", coverage:"Coverage",
     resetProgress:"Reset progress", refreshTopicsBtn:"↻ Refresh Topics", generatingDots:"Generating…", sessionsLoggedStat:"sessions logged",
     refreshesStat:"refreshes", resetTitle:"Reset progress?", resetBody:"Clears covered-topics and session log from this device. Obsidian exports are unaffected.",
-    yesReset:"Yes, reset", cancel:"Cancel", refreshTitle:"Refresh topic bank?", refreshBody:"Generates 27 new topics and resets coverage. Sessions and history are kept. Calls your Anthropic API key, at a small cost.",
+    yesReset:"Yes, reset", cancel:"Cancel", refreshTitle:"Refresh topic bank?", refreshBody:"Generates 18 new topics and resets coverage. Sessions and history are kept. Calls your Anthropic API key, at a small cost.",
     yesRefresh:"Yes, refresh", bankExhausted:"Bank exhausted", bankExhaustedBody:"All {n} topics have been covered. Use Refresh Topics in the sidebar to generate a fresh bank.", loading:"Loading…" },
   es: { subtitle:"15:00 investigación — 1:00 hablar — registro — exportar", navPractice:"PRÁCTICA", navLog:"REGISTRO DE SESIONES", navHistory:"HISTORIAL DE TEMAS",
     domainFilterLabel:"Filtro de dominio", all:"Todos", readyToRoll:"Listo para girar", roll:"Girar", rollAgain:"Girar de nuevo", rolling:"Girando…",
@@ -93,7 +93,7 @@ const UI_STRINGS = {
     ratingText:"Calificación", noRefreshes:"Aún no hay actualizaciones", copyEntireHistory:"Copiar todo el historial", topicsUnit:"temas", coverage:"Cobertura",
     resetProgress:"Restablecer progreso", refreshTopicsBtn:"↻ Actualizar temas", generatingDots:"Generando…", sessionsLoggedStat:"sesiones registradas",
     refreshesStat:"actualizaciones", resetTitle:"¿Restablecer progreso?", resetBody:"Esto borra los temas cubiertos y el registro de sesiones de este dispositivo. Las exportaciones a Obsidian no se ven afectadas.",
-    yesReset:"Sí, restablecer", cancel:"Cancelar", refreshTitle:"¿Actualizar el banco de temas?", refreshBody:"Genera 27 temas nuevos y reinicia la cobertura. Las sesiones y el historial se conservan. Usa tu clave de API de Anthropic, con un costo pequeño.",
+    yesReset:"Sí, restablecer", cancel:"Cancelar", refreshTitle:"¿Actualizar el banco de temas?", refreshBody:"Genera 18 temas nuevos y reinicia la cobertura. Las sesiones y el historial se conservan. Usa tu clave de API de Anthropic, con un costo pequeño.",
     yesRefresh:"Sí, actualizar", bankExhausted:"Banco de temas agotado", bankExhaustedBody:"Se han cubierto los {n} temas. Usa Actualizar temas en la barra lateral para generar un banco nuevo.", loading:"Cargando…" },
   it: { subtitle:"15:00 ricerca — 1:00 discorso — registro — esporta", navPractice:"PRATICA", navLog:"REGISTRO SESSIONI", navHistory:"CRONOLOGIA ARGOMENTI",
     domainFilterLabel:"Filtro per dominio", all:"Tutti", readyToRoll:"Pronto a girare", roll:"Gira", rollAgain:"Gira di nuovo", rolling:"In rotazione…",
@@ -108,7 +108,7 @@ const UI_STRINGS = {
     ratingText:"Voto", noRefreshes:"Nessun aggiornamento ancora", copyEntireHistory:"Copia tutta la cronologia", topicsUnit:"argomenti", coverage:"Copertura",
     resetProgress:"Reimposta progressi", refreshTopicsBtn:"↻ Aggiorna argomenti", generatingDots:"Generazione…", sessionsLoggedStat:"sessioni registrate",
     refreshesStat:"aggiornamenti", resetTitle:"Reimpostare i progressi?", resetBody:"Cancella gli argomenti coperti e il registro sessioni da questo dispositivo. Le esportazioni su Obsidian non sono interessate.",
-    yesReset:"Sì, reimposta", cancel:"Annulla", refreshTitle:"Aggiornare il banco argomenti?", refreshBody:"Genera 27 nuovi argomenti e azzera la copertura. Sessioni e cronologia vengono conservate. Utilizza la tua chiave API Anthropic, con un piccolo costo.",
+    yesReset:"Sì, reimposta", cancel:"Annulla", refreshTitle:"Aggiornare il banco argomenti?", refreshBody:"Genera 18 nuovi argomenti e azzera la copertura. Sessioni e cronologia vengono conservate. Utilizza la tua chiave API Anthropic, con un piccolo costo.",
     yesRefresh:"Sì, aggiorna", bankExhausted:"Banco argomenti esaurito", bankExhaustedBody:"Tutti i {n} argomenti sono stati coperti. Usa Aggiorna argomenti nella barra laterale per generarne di nuovi.", loading:"Caricamento…" },
   zh: { subtitle:"15:00 研究 — 1:00 演讲 — 记录 — 导出", navPractice:"练习", navLog:"练习记录", navHistory:"主题历史",
     domainFilterLabel:"领域筛选", all:"全部", readyToRoll:"准备好转动", roll:"转动", rollAgain:"再转一次", rolling:"转动中…",
@@ -123,7 +123,7 @@ const UI_STRINGS = {
     ratingText:"评分", noRefreshes:"暂无刷新记录", copyEntireHistory:"复制全部历史", topicsUnit:"个主题", coverage:"覆盖进度",
     resetProgress:"重置进度", refreshTopicsBtn:"↻ 刷新主题", generatingDots:"生成中…", sessionsLoggedStat:"次练习已记录",
     refreshesStat:"次刷新", resetTitle:"重置进度？", resetBody:"这将清除本设备上已覆盖的主题和练习记录。Obsidian 导出内容不受影响。",
-    yesReset:"确认重置", cancel:"取消", refreshTitle:"刷新主题库？", refreshBody:"将生成27个新主题并重置覆盖进度。练习记录与历史记录会保留。此操作会调用你的 Anthropic API 密钥，产生少量费用。",
+    yesReset:"确认重置", cancel:"取消", refreshTitle:"刷新主题库？", refreshBody:"将生成18个新主题并重置覆盖进度。练习记录与历史记录会保留。此操作会调用你的 Anthropic API 密钥，产生少量费用。",
     yesRefresh:"确认刷新", bankExhausted:"主题库已用完", bankExhaustedBody:"全部 {n} 个主题均已覆盖。请在侧边栏点击刷新主题以生成新的主题库。", loading:"加载中…" },
 };
 
@@ -679,7 +679,7 @@ function App() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Refresh failed");
       const valid = (data.topics || []).filter(tp => tp && tp.title && tp.domain && DOMAIN_LABELS_I18N.en[tp.domain] && tp.hook);
-      if (valid.length < 15) throw new Error("Too few valid topics returned — try again");
+      if (valid.length < 8) throw new Error("Too few valid topics returned — try again");
       const historyEntry = { id: Date.now().toString(36), date: new Date().toISOString(), count: valid.length, titles: valid.map(tp => tp.title) };
       const newHistory = [historyEntry, ...refreshHistory];
       setTopicBank(valid); setCoveredTopics([]); setCurrentTopic(null); setPhase("idle"); setRefreshHistory(newHistory); setReelText(t.readyToRoll);
