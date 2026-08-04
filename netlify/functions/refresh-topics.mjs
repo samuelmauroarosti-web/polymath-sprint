@@ -19,12 +19,12 @@ export default async (request, context) => {
     );
   }
 
-  const prompt = `Generate exactly 27 new "Polymath Sprint" speaking-practice topics for a 1-minute extemporaneous speaking app, 3 topics each across these 9 domain keys: physics, math, history, art, finance, ai, data, sport, lang.
+  const prompt = `Generate exactly 18 new "Polymath Sprint" speaking-practice topics for a 1-minute extemporaneous speaking app, 2 topics each across these 9 domain keys: physics, math, history, art, finance, ai, data, sport, lang.
 
 Rules for every topic:
 - title: a specific, counterintuitive claim or true story — never a vague subject area — the kind of thing that performs well as short-form content (Instagram Reels/TikTok style curiosity)
 - hook: one sentence stating why it's useful or how it bridges to finance, investing, AI, decision-making, sport performance, or language skill — written for a Hong Kong-raised, trilingual (English/Mandarin/Italian) Babson College finance student working toward a 2027 Millennium Management investment internship, with experience in investment banking, investment management, and equity research
-- domain spread must be exactly 3 topics per domain, 9 domains, 27 total
+- domain spread must be exactly 2 topics per domain, 9 domains, 18 total
 - Use single quotes, not double quotes, for any quoted term or phrase inside a title or hook
 - Do not repeat or closely resemble any of these existing titles: ${JSON.stringify(existingTitles)}
 
@@ -40,7 +40,7 @@ Call the submit_topics tool with the full list.`;
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 2000,
+        max_tokens: 3000,
         tools: [{
           name: "submit_topics",
           description: "Submit the generated list of speaking-practice topics.",
@@ -79,7 +79,11 @@ Call the submit_topics tool with the full list.`;
 
     const toolBlock = (data.content || []).find(b => b.type === "tool_use" && b.name === "submit_topics");
     if (!toolBlock || !toolBlock.input || !Array.isArray(toolBlock.input.topics)) {
-      throw new Error("Model did not return structured topics");
+      const textBlock = (data.content || []).find(b => b.type === "text");
+      throw new Error(
+        "Model did not return structured topics (stop_reason: " + (data.stop_reason || "unknown") + ")" +
+        (textBlock ? " — model said: " + textBlock.text.slice(0, 150) : "")
+      );
     }
 
     return new Response(JSON.stringify({ topics: toolBlock.input.topics }), {
