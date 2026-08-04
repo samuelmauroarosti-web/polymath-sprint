@@ -21,13 +21,14 @@ export default async (request, context) => {
 
   const prompt = `Generate exactly 27 new "Polymath Sprint" speaking-practice topics for a 1-minute extemporaneous speaking app, 3 topics each across these 9 domain keys: physics, math, history, art, finance, ai, data, sport, lang.
 
-Return ONLY a raw JSON array of 27 objects, nothing else — no markdown fences, no preamble, no explanation, no trailing commentary. Each object must have exactly these keys: "title" (string), "domain" (one of the 9 keys above, exactly as spelled), "hook" (string).
-
 Rules for every topic:
 - title: a specific, counterintuitive claim or true story — never a vague subject area — the kind of thing that performs well as short-form content (Instagram Reels/TikTok style curiosity)
 - hook: one sentence stating why it's useful or how it bridges to finance, investing, AI, decision-making, sport performance, or language skill — written for a Hong Kong-raised, trilingual (English/Mandarin/Italian) Babson College finance student working toward a 2027 Millennium Management investment internship, with experience in investment banking, investment management, and equity research
 - domain spread must be exactly 3 topics per domain, 9 domains, 27 total
-- Do not repeat or closely resemble any of these existing titles: ${JSON.stringify(existingTitles)}`;
+- Use single quotes, not double quotes, for any quoted term or phrase inside a title or hook
+- Do not repeat or closely resemble any of these existing titles: ${JSON.stringify(existingTitles)}
+
+Call the submit_topics tool with the full list.`;
 
   try {
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -39,7 +40,30 @@ Rules for every topic:
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 1800,
+        max_tokens: 2000,
+        tools: [{
+          name: "submit_topics",
+          description: "Submit the generated list of speaking-practice topics.",
+          input_schema: {
+            type: "object",
+            properties: {
+              topics: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string" },
+                    domain: { type: "string", enum: ["physics", "math", "history", "art", "finance", "ai", "data", "sport", "lang"] },
+                    hook: { type: "string" },
+                  },
+                  required: ["title", "domain", "hook"],
+                },
+              },
+            },
+            required: ["topics"],
+          },
+        }],
+        tool_choice: { type: "tool", name: "submit_topics" },
         messages: [{ role: "user", content: prompt }],
       }),
     });
@@ -53,11 +77,12 @@ Rules for every topic:
       );
     }
 
-    const raw = (data.content && data.content[0] && data.content[0].text) || "";
-    const cleaned = raw.replace(/```json|```/g, "").trim();
-    const topics = JSON.parse(cleaned);
+    const toolBlock = (data.content || []).find(b => b.type === "tool_use" && b.name === "submit_topics");
+    if (!toolBlock || !toolBlock.input || !Array.isArray(toolBlock.input.topics)) {
+      throw new Error("Model did not return structured topics");
+    }
 
-    return new Response(JSON.stringify({ topics }), {
+    return new Response(JSON.stringify({ topics: toolBlock.input.topics }), {
       status: 200,
       headers: { "content-type": "application/json" },
     });
