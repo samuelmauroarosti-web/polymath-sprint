@@ -73,7 +73,7 @@ const UI_STRINGS = {
     findingsPlaceholder:"What did you learn in the 15 minutes?", videoLabel:"Video link or filename", videoPlaceholder:"e.g. drive link, or IMG_0231.mov",
     notesLabel:"Self-review notes", ratingLabel:"Self-rating", saveSession:"Save Session", savedToast:"Saved ✓ generating insights…",
     storageWarning:"⚠ Storage unavailable", generatingInsights:"Generating key takeaways…", insightsFailed:"⚠ Insights failed.", retry:"Retry",
-    keyTakeaways:"Key Takeaways", researchFurther:"Research Further", suggestedVisual:"Suggested Visual", noSessions:"No sessions saved yet",
+    keyTakeaways:"Key Takeaways", researchFurther:"Research Further", suggestedVisual:"Suggested Visual", deliveryFeedback:"Delivery Feedback", noSessions:"No sessions saved yet",
     copyFullLog:"Copy full log", downloadFullLog:"Download full log (.md)", copy:"Copy", download:"Download", copied:"Copied ✓",
     ratingText:"Rating", noRefreshes:"No refreshes yet", copyEntireHistory:"Copy entire history", topicsUnit:"topics", coverage:"Coverage",
     resetProgress:"Reset progress", refreshTopicsBtn:"↻ Refresh Topics", generatingDots:"Generating…", sessionsLoggedStat:"sessions logged",
@@ -89,7 +89,7 @@ const UI_STRINGS = {
     findingsPlaceholder:"¿Qué aprendiste en los 15 minutos?", videoLabel:"Enlace de video o nombre de archivo", videoPlaceholder:"p. ej. enlace de drive, o IMG_0231.mov",
     notesLabel:"Notas de autoevaluación", ratingLabel:"Autocalificación", saveSession:"Guardar sesión", savedToast:"Guardado ✓ generando ideas clave…",
     storageWarning:"⚠ Almacenamiento no disponible", generatingInsights:"Generando ideas clave…", insightsFailed:"⚠ Error al generar ideas.", retry:"Reintentar",
-    keyTakeaways:"Ideas clave", researchFurther:"Investigar más", suggestedVisual:"Visual sugerido", noSessions:"Aún no hay sesiones guardadas",
+    keyTakeaways:"Ideas clave", researchFurther:"Investigar más", suggestedVisual:"Visual sugerido", deliveryFeedback:"Comentarios sobre la entrega", noSessions:"Aún no hay sesiones guardadas",
     copyFullLog:"Copiar registro completo", downloadFullLog:"Descargar registro completo (.md)", copy:"Copiar", download:"Descargar", copied:"Copiado ✓",
     ratingText:"Calificación", noRefreshes:"Aún no hay actualizaciones", copyEntireHistory:"Copiar todo el historial", topicsUnit:"temas", coverage:"Cobertura",
     resetProgress:"Restablecer progreso", refreshTopicsBtn:"↻ Actualizar temas", generatingDots:"Generando…", sessionsLoggedStat:"sesiones registradas",
@@ -105,7 +105,7 @@ const UI_STRINGS = {
     findingsPlaceholder:"Cosa hai imparato nei 15 minuti?", videoLabel:"Link video o nome file", videoPlaceholder:"es. link drive, o IMG_0231.mov",
     notesLabel:"Note di autovalutazione", ratingLabel:"Autovalutazione", saveSession:"Salva sessione", savedToast:"Salvato ✓ generazione spunti…",
     storageWarning:"⚠ Archiviazione non disponibile", generatingInsights:"Generazione spunti chiave…", insightsFailed:"⚠ Generazione spunti non riuscita.", retry:"Riprova",
-    keyTakeaways:"Punti chiave", researchFurther:"Da approfondire", suggestedVisual:"Visual suggerito", noSessions:"Nessuna sessione salvata",
+    keyTakeaways:"Punti chiave", researchFurther:"Da approfondire", suggestedVisual:"Visual suggerito", deliveryFeedback:"Feedback sulla presentazione", noSessions:"Nessuna sessione salvata",
     copyFullLog:"Copia registro completo", downloadFullLog:"Scarica registro completo (.md)", copy:"Copia", download:"Scarica", copied:"Copiato ✓",
     ratingText:"Voto", noRefreshes:"Nessun aggiornamento ancora", copyEntireHistory:"Copia tutta la cronologia", topicsUnit:"argomenti", coverage:"Copertura",
     resetProgress:"Reimposta progressi", refreshTopicsBtn:"↻ Aggiorna argomenti", generatingDots:"Generazione…", sessionsLoggedStat:"sessioni registrate",
@@ -121,7 +121,7 @@ const UI_STRINGS = {
     findingsPlaceholder:"这15分钟你学到了什么？", videoLabel:"视频链接或文件名", videoPlaceholder:"例如网盘链接，或 IMG_0231.mov",
     notesLabel:"自我复盘笔记", ratingLabel:"自评分数", saveSession:"保存记录", savedToast:"已保存 ✓ 正在生成要点…",
     storageWarning:"⚠ 存储不可用", generatingInsights:"正在生成关键要点…", insightsFailed:"⚠ 生成要点失败。", retry:"重试",
-    keyTakeaways:"关键要点", researchFurther:"值得深入研究", suggestedVisual:"建议的图示", noSessions:"暂无保存的记录",
+    keyTakeaways:"关键要点", researchFurther:"值得深入研究", suggestedVisual:"建议的图示", deliveryFeedback:"演讲反馈", noSessions:"暂无保存的记录",
     copyFullLog:"复制完整记录", downloadFullLog:"下载完整记录（.md）", copy:"复制", download:"下载", copied:"已复制 ✓",
     ratingText:"评分", noRefreshes:"暂无刷新记录", copyEntireHistory:"复制全部历史", topicsUnit:"个主题", coverage:"覆盖进度",
     resetProgress:"重置进度", refreshTopicsBtn:"↻ 刷新主题", generatingDots:"生成中…", sessionsLoggedStat:"次练习已记录",
@@ -334,6 +334,7 @@ function toObsidianMarkdown(s) {
     "domain: " + s.domain + "\n" + "rating: " + s.rating + "/5\n" + "tags: [Readings, " + s.domain + "]\n" + "---\n\n" +
     "## Topic\n" + s.topic + "\n\n" + "## Research Findings\n" + (s.findings || "_(none recorded)_") + "\n\n" +
     "## Speech\nVideo: " + (s.video || "_(none recorded)_") + "\n\n" + "## Self-Review\n" + (s.notes || "_(none recorded)_") + "\n\n";
+  if (s.deliveryFeedback) md += "## Delivery Feedback\n" + s.deliveryFeedback + "\n\n";
   if (s.takeaways && s.takeaways.length) md += "## Key Takeaways\n" + s.takeaways.map(t => "- " + t).join("\n") + "\n\n";
   if (s.researchFurther && s.researchFurther.length) md += "## Research Further\n" + s.researchFurther.map(t => "- " + t).join("\n") + "\n\n";
   md += visualToMarkdown(s.visual, s.visualSuggestion);
@@ -571,6 +572,7 @@ function App() {
         takeaways: Array.isArray(data.takeaways) ? data.takeaways : [],
         researchFurther: Array.isArray(data.researchFurther) ? data.researchFurther : [],
         visual: (data.visual && data.visual.type) ? data.visual : null,
+        deliveryFeedback: data.deliveryFeedback || "",
       });
     } catch (e) { updateSessionInsights(session.id, { insightsStatus: "error" }); }
   };
@@ -906,6 +908,7 @@ function App() {
     if (s.insightsStatus === "done") return React.createElement("div", { className: "mt-4 pt-4 border-t border-edge space-y-3" },
       s.takeaways && s.takeaways.length ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-teal uppercase tracking-wider mb-1" }, t.keyTakeaways), React.createElement("ul", { className: "text-xs space-y-1 list-disc pl-4 text-inkdim" }, s.takeaways.map((tk, i) => React.createElement("li", { key: i }, tk)))) : null,
       s.researchFurther && s.researchFurther.length ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-violet uppercase tracking-wider mb-1" }, t.researchFurther), React.createElement("ul", { className: "text-xs space-y-1 list-disc pl-4 text-inkdim" }, s.researchFurther.map((tk, i) => React.createElement("li", { key: i }, tk)))) : null,
+      s.deliveryFeedback ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-cyan uppercase tracking-wider mb-1" }, t.deliveryFeedback), React.createElement("p", { className: "text-xs text-inkdim" }, s.deliveryFeedback)) : null,
       s.visual && s.visual.type ? React.createElement("div", { className: "bg-surfaceHover/50 rounded-xl p-4" }, React.createElement(VisualRenderer, { v: s.visual })) :
         s.visualSuggestion ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-inkdim uppercase tracking-wider mb-1" }, t.suggestedVisual), React.createElement("div", { className: "text-xs italic" }, s.visualSuggestion)) : null
     );
@@ -933,6 +936,7 @@ function App() {
           )
         ),
         s.findings ? React.createElement("p", { className: "text-xs text-inkdim mt-3 line-clamp-3" }, s.findings) : null,
+        s.notes ? React.createElement("p", { className: "text-xs text-inkdim/70 mt-2 italic line-clamp-2" }, s.notes) : null,
         insightsBlock(s)
       )
     )
