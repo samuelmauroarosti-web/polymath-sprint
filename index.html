@@ -563,7 +563,7 @@ function App() {
     try {
       const resp = await fetch("/.netlify/functions/analyze-session", {
         method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ topic: session.topic, domain: session.domain, findings: session.findings, notes: session.notes, langName: LANGUAGE_NAMES[langAtSave] }),
+        body: JSON.stringify({ mode: "topic", topic: session.topic, domain: session.domain, findings: session.findings, langName: LANGUAGE_NAMES[langAtSave] }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Insights failed");
@@ -572,9 +572,20 @@ function App() {
         takeaways: Array.isArray(data.takeaways) ? data.takeaways : [],
         researchFurther: Array.isArray(data.researchFurther) ? data.researchFurther : [],
         visual: (data.visual && data.visual.type) ? data.visual : null,
-        deliveryFeedback: data.deliveryFeedback || "",
       });
     } catch (e) { updateSessionInsights(session.id, { insightsStatus: "error" }); }
+  };
+  const analyzeDelivery = async (session, langAtSave) => {
+    updateSessionInsights(session.id, { deliveryStatus: "loading" });
+    try {
+      const resp = await fetch("/.netlify/functions/analyze-session", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ mode: "delivery", topic: session.topic, domain: session.domain, findings: session.findings, notes: session.notes, langName: LANGUAGE_NAMES[langAtSave] }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || "Delivery feedback failed");
+      updateSessionInsights(session.id, { deliveryStatus: "done", deliveryFeedback: data.deliveryFeedback || "" });
+    } catch (e) { updateSessionInsights(session.id, { deliveryStatus: "error" }); }
   };
 
   // lazy on-demand translation of the current topic only
@@ -686,7 +697,7 @@ function App() {
 
   const saveSession = () => {
     if (!currentTopic) return;
-    const session = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7), topic: currentTopic.title, domain: currentTopic.domain, date: new Date().toISOString(), findings, video, notes, rating, insightsStatus: "idle" };
+    const session = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7), topic: currentTopic.title, domain: currentTopic.domain, date: new Date().toISOString(), findings, video, notes, rating, insightsStatus: "idle", deliveryStatus: "idle" };
     const newLog = [session, ...sessionLog];
     const newCovered = coveredTopics.includes(currentTopic.title) ? coveredTopics : [...coveredTopics, currentTopic.title];
     setSessionLog(newLog); setCoveredTopics(newCovered);
@@ -695,6 +706,7 @@ function App() {
     setFindings(""); setVideo(""); setNotes(""); setRating(0);
     setCurrentTopic(null); setPhase("idle"); setReelText(t.readyToRoll);
     analyzeSessionInsights(session, lang);
+    analyzeDelivery(session, lang);
   };
   const practiceAgain = (s) => {
     const found = topicBank.find(tp => tp.title === s.topic);
@@ -902,18 +914,26 @@ function App() {
   const savedToast = savedFlash ? React.createElement("div", { className: "fixed bottom-6 right-6 bg-surface border border-teal/40 text-ink text-xs px-4 py-2.5 rounded-full shadow-lg z-50" }, t.savedToast) : null;
   const storageWarning = storageError ? React.createElement("div", { className: "fixed bottom-6 left-6 bg-rose text-white text-xs px-4 py-2.5 rounded-full shadow-lg z-50" }, t.storageWarning) : null;
 
-  const insightsBlock = (s) => {
+  const topicInsightsBlock = (s) => {
     if (s.insightsStatus === "loading") return React.createElement("div", { className: "text-xs text-inkdim mt-3 flex items-center gap-2" }, React.createElement("span", { className: "inline-block w-3 h-3 border-2 border-inkdim border-t-transparent rounded-full spin" }), t.generatingInsights);
-    if (s.insightsStatus === "error") return React.createElement("div", { className: "text-xs text-rose mt-3" }, t.insightsFailed + " ", React.createElement("button", { onClick: () => analyzeSessionInsights(s, lang), className: "underline" }, t.retry));
     if (s.insightsStatus === "done") return React.createElement("div", { className: "mt-4 pt-4 border-t border-edge space-y-3" },
       s.takeaways && s.takeaways.length ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-teal uppercase tracking-wider mb-1" }, t.keyTakeaways), React.createElement("ul", { className: "text-xs space-y-1 list-disc pl-4 text-inkdim" }, s.takeaways.map((tk, i) => React.createElement("li", { key: i }, tk)))) : null,
       s.researchFurther && s.researchFurther.length ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-violet uppercase tracking-wider mb-1" }, t.researchFurther), React.createElement("ul", { className: "text-xs space-y-1 list-disc pl-4 text-inkdim" }, s.researchFurther.map((tk, i) => React.createElement("li", { key: i }, tk)))) : null,
-      s.deliveryFeedback ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-cyan uppercase tracking-wider mb-1" }, t.deliveryFeedback), React.createElement("p", { className: "text-xs text-inkdim" }, s.deliveryFeedback)) : null,
       s.visual && s.visual.type ? React.createElement("div", { className: "bg-surfaceHover/50 rounded-xl p-4" }, React.createElement(VisualRenderer, { v: s.visual })) :
         s.visualSuggestion ? React.createElement("div", null, React.createElement("div", { className: "text-xs text-inkdim uppercase tracking-wider mb-1" }, t.suggestedVisual), React.createElement("div", { className: "text-xs italic" }, s.visualSuggestion)) : null
     );
+    // idle, missing, or error — always show a retry, never a silent blank
     return React.createElement("div", { className: "text-xs text-rose mt-3" }, t.insightsFailed + " ", React.createElement("button", { onClick: () => analyzeSessionInsights(s, lang), className: "underline" }, t.retry));
   };
+  const deliveryBlock = (s) => {
+    if (s.deliveryStatus === "loading") return React.createElement("div", { className: "text-xs text-inkdim mt-3 flex items-center gap-2" }, React.createElement("span", { className: "inline-block w-3 h-3 border-2 border-inkdim border-t-transparent rounded-full spin" }), t.generatingInsights);
+    if (s.deliveryStatus === "done" && s.deliveryFeedback) return React.createElement("div", { className: "mt-3" },
+      React.createElement("div", { className: "text-xs text-cyan uppercase tracking-wider mb-1" }, t.deliveryFeedback),
+      React.createElement("p", { className: "text-xs text-inkdim" }, s.deliveryFeedback)
+    );
+    return React.createElement("div", { className: "text-xs text-rose mt-3" }, t.insightsFailed + " ", React.createElement("button", { onClick: () => analyzeDelivery(s, lang), className: "underline" }, t.retry));
+  };
+  const insightsBlock = (s) => React.createElement(React.Fragment, null, topicInsightsBlock(s), deliveryBlock(s));
 
   const logView = React.createElement("div", { className: "space-y-4" },
     sessionLog.length === 0 ? React.createElement("div", { className: "text-center text-inkdim text-sm py-16 border border-dashed border-edge rounded-2xl" }, t.noSessions)
